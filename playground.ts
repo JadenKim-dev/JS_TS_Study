@@ -25,16 +25,16 @@ function add(a, b) {
   return a + b;
 }
 const three = add(1, 2); // number
-const twelve = add('1', '2'); // string
+const twelve = add("1", "2"); // string
 
 function logMessage(message: string | null) {
   if (message) {
-    message
+    message;
   }
 }
 
-const path = '/path/to/file';
-path.split('/').slice(1).join('/') 
+const path = "/path/to/file";
+path.split("/").slice(1).join("/");
 
 interface Person {
   name: string;
@@ -57,7 +57,7 @@ const list: number[] = tuple;
 type D = Exclude<string | Date, string | number>; // Date
 type NonZeroNums = Exclude<number, 0>; // number
 
-const num: NonZeroNums = 0; 
+const num: NonZeroNums = 0;
 
 // interface Cylinder {
 //   radius: number;
@@ -83,5 +83,36 @@ class Cylinder {
 
 type TC = typeof Cylinder;
 type TI = InstanceType<TC>;
-type a = TI['radius'];
-type b = TC['call'];
+type a = TI["radius"];
+type b = TC["call"];
+
+function logArray(arr: number[]) {
+  console.log(arr);
+}
+
+const a: readonly number[] = [1, 2, 3];
+logArray(a);
+logArray(a as number[]);
+
+function parseTaggedText(lines: string[]): string!][] {
+  const paragraphs: string[] [] = [];
+  const currPara: string!] = [];
+  const addParagraph =()=>{
+    if (currPara.length) {
+      paragraphs.push(currPara);
+      currPara.length = 0; // 배열을 비움
+    }
+  };
+}
+
+let ccc: readonly number = 3;
+ccc = 2;
+
+
+let obj: { readonly [k: string]: number } = {};
+// Readonly<{ [k: string]: number }> 도 가능
+obj.hi = 45;
+// ... 형식의 인덱스 시그니처는 읽기만 허용됩니다
+
+obj = { ...obj, hi: 12 }; // 정상
+obj = { ...obj, bye: 34 }; // 정상
