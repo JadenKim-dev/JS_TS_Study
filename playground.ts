@@ -116,3 +116,8 @@ obj.hi = 45;
 
 obj = { ...obj, hi: 12 }; // 정상
 obj = { ...obj, bye: 34 }; // 정상
+
+const c = 'c';
+
+const axis1 = "x"; // "x"
+let axis2 = "x"; // string
