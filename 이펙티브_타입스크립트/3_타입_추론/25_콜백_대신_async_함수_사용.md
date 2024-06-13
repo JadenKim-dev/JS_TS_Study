@@ -13,7 +13,9 @@ Promise.all과 달리 콜백에서는 에러 처리를 포함하기도 어렵다
 async function fetchPages() {
   // 결과가 각각 Response 타입
   const [response1, response2, response3] = await Promise.all([
-    fetch(url1), fetch(url2), fetch(url3)
+    fetch(url1),
+    fetch(url2),
+    fetch(url3),
   ]);
   // ...
 }
@@ -27,7 +29,7 @@ function fetchPagesCB() {
   };
   const urls = [url1, url2, url3];
   urls.forEach((url, i) => {
-    fetchURL(url, r => {
+    fetchURL(url, (r) => {
       responses[i] = r;
       numDone++;
       if (numDone === urls.length) done();
@@ -44,7 +46,7 @@ Promise.race의 반환 타입은 입력 타입들의 유니온으로 결정된�
 ```ts
 function timeout(millis: number): Promise<never> {
   return new Promise((resolve, reject) => {
-    setTimeout(() => reject('timeout'), millis);
+    setTimeout(() => reject("timeout"), millis);
   });
 }
 
@@ -65,14 +67,14 @@ async 함수를 사용하면 함수의 동작을 비동기로 일관되게 통�
 const _cache: { [url: string]: string } = {};
 
 function fetchWithCache(url: string, callback: (text: string) => void) {
-    if (url in _cache) {
-        callback(_cache[url]);
-    } else {
-        fetchURL(url, (text) => {
-            _cache[url] = text;
-            callback(text);
-        });
-    }
+  if (url in _cache) {
+    callback(_cache[url]);
+  } else {
+    fetchURL(url, (text) => {
+      _cache[url] = text;
+      callback(text);
+    });
+  }
 }
 ```
 
@@ -80,13 +82,13 @@ function fetchWithCache(url: string, callback: (text: string) => void) {
 이 때 동기로 동작할 때에는 즉시 fetchWithCache에 넘긴 콜백이 실행되어 status가 success가 된 후, 이후 로직에 따라 loading으로 덮어 씌어지게 된다.
 
 ```ts
-let status: 'loading' | 'success' | 'error';
+let status: "loading" | "success" | "error";
 
 function getUser(userid: string) {
-  fetchWithCache(`/user/${userId}`, profile => {
-    status = 'success';
+  fetchWithCache(`/user/${userId}`, (profile) => {
+    status = "success";
   });
-  status = 'loading';
+  status = "loading";
 }
 ```
 
@@ -106,18 +108,22 @@ async function fetchWithCache(url: string) {
   return text;
 }
 
-let requeststatus: 'loading' | 'success' | 'error';
+let requeststatus: "loading" | "success" | "error";
 
 async function getUser(userid: string) {
-  requeststatus = 'loading';
+  requeststatus = "loading";
   const profile = await fetchWithCache(`/user/${userid}`);
-  requeststatus = 'success';
+  requeststatus = "success";
 }
 ```
 
+추가적으로 async 함수에서는 프로미스를 반환해도 추가로 프로미스로 래핑하지 않고 반환한다.  
+예를 들어 Promise<T>를 반환해도 Promise<Promise<T>>가 아닌 Promise<T>가 그대로 반환된다.
 
-
-
-
-
-
+```ts
+async function getJSON(url: string): Promise<any> {
+  const response = await fetch(url);
+  const jsonPromise = response.json(); // Promise<any>
+  return jsonPromise;
+}
+```
