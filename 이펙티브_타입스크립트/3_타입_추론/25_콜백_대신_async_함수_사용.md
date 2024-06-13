@@ -118,7 +118,7 @@ async function getUser(userid: string) {
 ```
 
 추가적으로 async 함수에서는 프로미스를 반환해도 추가로 프로미스로 래핑하지 않고 반환한다.  
-예를 들어 Promise<T>를 반환해도 Promise<Promise<T>>가 아닌 Promise<T>가 그대로 반환된다.
+예를 들어 `Promise<T>`를 반환해도 `Promise<Promise<T>>`가 아닌 `Promise<T>`가 그대로 반환된다.
 
 ```ts
 async function getJSON(url: string): Promise<any> {
