@@ -121,3 +121,52 @@ const c = 'c';
 
 const axis1 = "x"; // "x"
 let axis2 = "x"; // string
+
+
+type Product = {
+  name: string;
+  id: string;
+  price: number;
+};
+
+const elmo: Product = {
+  name: "Tickle Me Elmo",
+  id: "048188 627152",
+};
+
+const cache: {[ticker: string]: number} = {};
+function getQuote(ticker: string): Promise<number> {
+  if (ticker in cache) {
+    return Promise.resolve(cache[ticker]);
+  }
+  return fetch(`https://quotes.example.com/?q=${ticker}`)
+    .then(response => response.json())
+    .then(quote => {
+      cache[ticker] = quote;
+      return quote;
+    });
+}
+
+interface Vector3 {
+  x: number;
+  y: number;
+  z: number;
+}
+function getComponent(vector: Vector3, axis: "x" | "y" | "z") {
+  return vector[axis];
+}
+
+let x = "x";
+x = "a";
+x = "Four score and seven years ago...";
+
+const rawRows = ["1234"];
+const headers = ["name", "age", "city"];
+const rows = rawRows.slice(1).map((rowStr) =>
+  rowStr.split(",").reduce((row, val, i) => {
+    row['1234'] = val;
+    row[headers[i]] = val;
+    // '{}' 형식에서 'string' 형식의 매개변수가 포함된 인덱스 시그니처를 찾을 수 없습니다.
+    return row;
+  }, {})
+);
