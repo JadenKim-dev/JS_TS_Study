@@ -64,7 +64,7 @@ const span = max - min; // 정상
 
 ```ts
 class UserPosts {
-  user: Userinfo | null;
+  user: UserInfo | null;
   posts: Post[] | null;
 
   constructor() {
@@ -80,7 +80,7 @@ class UserPosts {
   }
 
   getUserName() {
-    // 구현이 애매함
+    return this.user?.name;
   }
 }
 ```
@@ -90,18 +90,18 @@ class UserPosts {
 
 ```ts
 class UserPosts {
-  user: Userinfo;
+  user: UserInfo;
   posts: Post[];
 
-  constructor(user: Userinfo, posts: Post[]) {
+  constructor(user: UserInfo, posts: Post[]) {
     this.user = user;
     this.posts = posts;
   }
 
-  static async init(userid: string): Promise<UserPosts> {
+  static async init(userId: string): Promise<UserPosts> {
     const [user, posts] = await Promise.all([
-      fetchUser(userid),
-      fetchPostsForUser(userid)
+      fetchUser(userId),
+      fetchPostsForUser(userId)
     ]);
     return new UserPosts(user, posts);
   }
