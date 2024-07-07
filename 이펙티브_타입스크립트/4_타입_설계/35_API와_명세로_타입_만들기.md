@@ -29,3 +29,50 @@ function calculateBoundingBox(f: Feature): BoundingBox | null {
   return box;
 }
 ```
+
+해당 에러를 해결하기 위해서는 geometry의 타입을 체크해서 coordinates 속성을 가지는 타입인지를 확인해야 한다.  
+이 때 함수로 해당 로직을 감싸서, GeometryCollection인 경우에는 내부의 geometries를 순회해서 적용하도록 구현하면 모든 타입에 대응하도록 할 수 있다.
+
+```ts
+const geometryHelper = (g: Geometry) => {
+  if (g.type === 'GeometryCollection') {
+    g.geometries.forEach(geometryHelper);
+  } else {
+    helper(g, coordinates); // 정상
+  }
+}
+
+const { geometry } = f;
+if (geometry) {
+  geometryHelper(geometry);
+}
+```
+
+이와 같이 명세로부터 타입을 작성하면 예외 상황을 누락하는 등의 실수를 줄여서, 가능한 모든 값에 대해서 로직이 동작함을 확신할 수 있다.  
+이는 API의 경우도 마찬가지이기 때문에, 명세로부터 타입을 생성할 수 있다면 가능한 그렇게 해야 한다.  
+특히 GraphQL은 타입 시스템을 통해 스키마에 가능한 모든 쿼리와 인타페이스를 명세하기 때문에 더욱 유리하다.  
+예를 들어 저장소로부터 데이터를 요청하는 코드를 다음과 같이 작성하여 데이터를 응답 받을 수 있다.
+
+```ts
+query {
+  repository(owner: "Microsoft", name: "TypeScript") {
+    createdAt
+    description
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "repository": {
+      "createdAt": "2014-06-17T15:28:39Z",
+      "description": "TypeScript is a superset of JavaScript that compiles to JavaScript."
+    }
+  }
+}
+```
+
+GraphQL은 특정 쿼리에 대해 타입스크립트 타입을 생성할 수 있다.  
+다음 쿼리는 Github 저장소에서 오픈소스 라이선스를 조회하는 쿼리이다.  
+이 때 $owner와 $name을 String 타입의 GraphQL 변수로 정의했다.
