@@ -75,4 +75,61 @@ query {
 
 GraphQL은 특정 쿼리에 대해 타입스크립트 타입을 생성할 수 있다.  
 다음 쿼리는 Github 저장소에서 오픈소스 라이선스를 조회하는 쿼리이다.  
-이 때 $owner와 $name을 String 타입의 GraphQL 변수로 정의했다.
+이 때 $owner와 $name을 String 타입의 GraphQL 변수로 정의했다.  
+GraphQL의 String은 기본적으로 null을 허용하고, 뒤에 !를 붙여서 null이 아님을 명시한다.
+
+```ts
+query getLicense($owner: String!, $name: String!) {
+  repository(owner: $owner, name: $name) {
+    licenseInfo {
+      name
+      url
+    }
+  }
+}
+```
+
+이 때 GraphQL 쿼리를 타입스크립트 타입으로 변환해주는 여러 도구들이 존재하는데, 그 중 하나가 apollo 이다.  
+다음의 커맨드는 https://api.github.com/graphql의 license.graphql 스키마로부터 타입스크립트 타입을 생성한다.
+
+```bash
+$ apollo client:codegen \
+  --endpoint https://api.github.com/graphql \
+  --includes license.graphql \
+  --target typescript
+```
+
+이 때 다음과 같이 쿼리 매개변수에 대한 getLicenseVariables와 응답에 대한 getLicense 인터페이스가 생성된다.  
+null 가능 여부도 응답 인터페이스로 변환되어 적절히 지정되었고, 주석은 JSDoc으로 변환되었다.
+
+```ts
+export interface getLicense_repository_licenseInfo {
+  __typename: "License";
+  /** Short identifier specified by <https://spdx.org/licenses> */
+  spdxId: string | null;
+  /** The license full name specified by <https://spdx.org/licenses> */
+  name: string;
+}
+
+export interface getLicense_repository {
+  __typename: "Repository";
+  /** The description of the repository. */
+  description: string | null;
+  /** The license associated with the repository */
+  licenseInfo: getLicense_repository_licenseInfo | null;
+}
+
+export interface getLicense {
+  /** Lookup a given repository by the owner and repository name. */
+  repository: getLicense_repository | null;
+}
+
+export interface getLicenseVariables {
+  owner: string;
+  name: string;
+}
+```
+
+이렇게 자동으로 생성된 타입을 이용하면 타입과 실제값이 언제나 일치하는 것을 보장 받을 수 있다.  
+명세 정보나 공식 스키마가 없다면 quicktype과 같은 도구를 사용해서 타입을 생성할 수 있다.  
+하지만 이 경우에는 언제나 예외적인 경우가 존재할 수 있기 때문에 타입이 정확하지 않을 수 있음을 주의해야 한다.
