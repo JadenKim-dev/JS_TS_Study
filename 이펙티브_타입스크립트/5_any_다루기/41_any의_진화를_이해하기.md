@@ -16,3 +16,73 @@ function range(start: number, limit: number) {
     return out; // 타입이 number[]
 }
 ```
+
+배열에 다양한 요소를 삽입하면 해당 요소의 타입에 따라 타입이 진화한다.
+
+```ts
+const result = []; // any[]
+result.push('a');
+result // string[]
+result.push(1);
+result // (string | number) []
+```
+
+조건문에서는 분기에 따라 타입이 변하기도 한다.  
+다음 코드에서 val 는 if 와 else 안에서 다른 타입을 가지고, 최종적으로 해당 타입들의 유니온 타입을 가지게 된다.
+
+```ts
+let val: any; // 타입이 any
+if (Math.random() < 0.5) {
+    val = /hello/;
+    val; // 타입이 RegExp
+} else {
+    val = 12;
+    val; // 타입이 number
+}
+val; // 타입이 number | RegExp
+```
+
+try catch 문에서도 비슷한 방식으로 동작하고, null로 초기값을 설정한 경우에도 any의 진화가 이루어진다.  
+다음 예제에서는 somethingDangerous의 성공 여부에 따라 val에 12가 할당되는지가 달라지므로, `number | null` 타입으로 진화한다.
+
+```ts
+let val = null; // val의 타입은 any
+try {
+    somethingDangerous();
+    val = 12;
+    val // 타입이 number
+} catch (e) {
+    console.warn('alas!');
+}
+val // 타입이 number | null
+```
+
+any의 진화는 noImplicitAny가 설정된 상태에서 변수의 타입이 암시적 any인 경우에 발생한다.  
+암시적 any 타입의 변수에 아무런 값을 할당하지 않은 상태에서 접근하면 타입 에러가 벌생한다.
+
+```ts
+function range(start: number, limit: number) {
+    const out = [];
+    // 'out' 변수는 형식을 확인할 수 없는 경우 일부 위치에서 암시적으로 ‘any' 형식입니다.
+    if (start === limit) {
+        return out;
+        // 'out' 변수에는 암시적으로 'any[]' 형식이 포함됩니다.
+    }
+    // 추가 로직이 필요할 경우 여기에 작성
+}
+```
+
+이 때 주의할 점은 암시적 any 타입은 함수 호출을 거친다고 진화하지는 않는다는 것이다.  
+예를 들어 다음 코드의 forEach에서는 out에 number 값을 삽입했으나, forEach 밖에 있는 out의 타입은 진화되지 않았다.
+
+```ts
+function makeSquares(start: number, limit: number) {
+    const out = [];
+    // ~ 'out' 변수는 일부 위치에서 암시적으로 'any[]’ 형식입니다.
+    range(start, limit).forEach(i => {
+        out.push(i * i);
+    });
+    return out;
+    // ~ 'out' 변수에는 암시적으로 'any[]' 형식이 포함됩니다.
+}
+```
