@@ -5,7 +5,7 @@
 암시적 any 타입의 변수에 값을 할당하면 해당하는 값의 타입으로 any가 진화한다.
 
 예를 들어 start에서 limit 까지의 숫자를 배열에 담아 반환하는 range 메서드를 구현해보자.  
-아래 구현에서 반환 값인 out의 타입은 처음에는 `any[]` 였다가, 이후에 number 값들이 추가되면서 `number[]`로 진화했다.
+아래 구현에서 반환 값인 out의 타입은 처음에는 `any[]` 였다가, 이후에 number 값들이 추가되면서 `number[]`로 진화했다.  
 
 ```ts
 function range(start: number, limit: number) {
@@ -58,6 +58,22 @@ val // 타입이 number | null
 ```
 
 any의 진화는 noImplicitAny가 설정된 상태에서 변수의 타입이 암시적 any인 경우에 발생한다.  
+명시적으로 변수의 타입을 any[]로 지정한 경우에는 any의 진화가 발생하지 않는다.
+
+```ts
+let val: any;
+
+if (Math.random() < 0.5) {
+    val = /hello/;
+    val; // any
+} else {
+    val = 12;
+    val; // any
+}
+
+val; // any
+```
+
 암시적 any 타입의 변수에 아무런 값을 할당하지 않은 상태에서 접근하면 타입 에러가 벌생한다.
 
 ```ts
@@ -72,8 +88,9 @@ function range(start: number, limit: number) {
 }
 ```
 
-이 때 주의할 점은 암시적 any 타입은 함수 호출을 거친다고 진화하지는 않는다는 것이다.  
-예를 들어 다음 코드의 forEach에서는 out에 number 값을 삽입했으나, forEach 밖에 있는 out의 타입은 진화되지 않았다.
+이 때 암시적 any 타입은 함수 호출을 거칠 때에는 진화하지는 않는다는 점을 주의해야 한다.  
+예를 들어 다음 코드의 forEach에서는 out에 number 값을 삽입했으나, forEach 밖에 있는 out의 타입은 진화되지 않았다.  
+이 경우에는 map, filter 등을 통해서 새로운 배열을 생성하여 반환받는 식으로 any를 진화시켜야 한다.
 
 ```ts
 function makeSquares(start: number, limit: number) {
@@ -86,3 +103,5 @@ function makeSquares(start: number, limit: number) {
     // ~ 'out' 변수에는 암시적으로 'any[]' 형식이 포함됩니다.
 }
 ```
+
+다만 any의 진화는 할당하는 값에 따라 유동적으로 타입이 변화하는 것이기 때문에, 타입을 안전하게 지키려면 명시적으로 타입을 지정해서 사용해야 한다.
