@@ -27,7 +27,6 @@ book('read'); // 오류 없음, 런타임에 "TypeError: book은 함수가 아�
 
 이 때 unknown을 반환 타입으로 사용하면 더욱 타입 안전하게 사용할 수 있다.  
 unknown 타입의 변수는 타입을 단언하기 전까지는 속성에 접근하거나 함수로 사용하는 것이 불가능하다.  
-이를 통해 사용자가 명시적으로 타입을 지정하도록 강제할 수 있다.
 
 ```ts
 function safeParseYAML(yaml: string): unknown {
@@ -42,7 +41,8 @@ alert(book.title); // 개체가 ’unknown’ 형식입니다.
 book('read'); // 개체가 'unknown' 형식입니다.
 ```
 
-정상적으로 book 변수를 사용하기 위해서는 다음과 같이 타입 단언을 수행해야 한다.
+정상적으로 book 변수를 사용하기 위해서는 다음과 같이 타입 단언을 수행해야 한다.  
+이러한 제약 사항을 통해 사용자가 명시적으로 타입을 지정하도록 강제할 수 있다.
 
 ```ts
 interface Book {
@@ -55,3 +55,18 @@ const book = safeParseYAML(`
   author: Anne Bronte
 `) as Book
 ```
+
+이번엔 변수 선언과 관련한 unknown 타입에 대해서 알아보자.  
+어떠한 값이 어떤 타입을 가질지 알 수 없을 때 unknown을 사용한다.  
+대표적으로 GeoJSON.Feature의 properties 속성에는 JSON 직렬화가 가능한 어떤 값이든 담을 수 있기 때문에 unknown으로 선언되었다.
+
+```ts
+interface Feature {
+  id?: string | number;
+  geometry: Geometry;
+  properties: unknown;
+}
+```
+
+메서드의 매개변수로 unknown을 사용하는 것도 가능하다.  
+unknown은 타입 단언문을 사용하지 않고 다른 타입으로 좁히는 것도
