@@ -56,6 +56,21 @@ const book = safeParseYAML(`
 `) as Book
 ```
 
+이 때 타입 단언문을 사용하는 대신 제네릭을 사용하는 것도 불가능하진 않다.  
+다만 제네릭을 사용하면 기능적으로는 동일하게 동작하지만, 타입 단언 또는 검증의 책임을 감추는 문제가 있다.  
+따라서 가능하면 직접 타입 단언이나 타입 좁히기를 사용하여 원하는 타입으로 변환해야 한다.
+
+```ts
+function safeParseYAML<T>(yaml: string): T {
+  return parseYAML(yaml);
+}
+
+const result = safeParseYAML<Book>(`
+  name: The Tenant of Wildfell Hall
+  author: Anne Bronte
+`)
+```
+
 이번엔 변수 선언과 관련한 unknown 타입에 대해서 알아보자.  
 어떠한 값이 어떤 타입을 가질지 알 수 없을 때 unknown을 사용한다.  
 대표적으로 GeoJSON.Feature의 properties 속성에는 JSON 직렬화가 가능한 어떤 값이든 담을 수 있기 때문에 unknown으로 선언되었다.
@@ -69,4 +84,32 @@ interface Feature {
 ```
 
 메서드의 매개변수로 unknown을 사용하는 것도 가능하다.  
-unknown은 타입 단언문을 사용하지 않고 다른 타입으로 좁히는 것도
+이 때 함수 내에서 해당 변수를 사용하기 위해서는 다른 타입으로 변환을 해야 한다.  
+아래 예제에서는 매개변수로 받은 unknown 타입의 val 변수를 instanceof를 통해 다른 타입으로 좁히고 있다.
+
+```ts
+function processValue(val: unknown) {
+    if (val instanceof Date) {
+        val // Date
+    }
+}
+```
+
+또는 타입 가드를 통해서 변수의 타입을 좁히는 것도 가능하다.  
+다만 이를 위해 타입 가드 내에 많은 검증 구문을 삽입해야 한다.  
+아래 예제에서는 typeof 객체 확인, null 체크, 그리고 모든 속성에 대한 체크 구문을 추가했다.
+
+```ts
+function isBook(val: unknown): val is Book {
+    return (
+        typeof(val) === 'object' && val !== null &&
+        'name' in val && 'author' in val
+    );
+}
+
+function processValue(val: unknown) {
+    if (isBook(val)) {
+        val; // Book
+    }
+}
+```
