@@ -170,3 +170,23 @@ const rows = rawRows.slice(1).map((rowStr) =>
     return row;
   }, {})
 );
+
+declare function map<U, V>(array: U[], fn: (this: U[], u: U, i: number, array: U[]) => V): V[];
+function assertType<T>(x: T) {}
+
+const beatles = ['john', 'paul', 'george', 'ringo'];
+
+assertType<number[]>(
+  map(beatles, function(name, i, array) {
+    // ' (name: any, i: any, array: any) => any' 형식의 인수는
+    // '(u: string) => any' 형식의 매개변수에 할당될 수 없습니다.
+
+    assertType<string>(name);
+    assertType<number>(i);
+    assertType<string[]>(array);
+    assertType<string[]>(this);
+    // 'this'에는 암시적으로 'any' 형식이 포함됩니다.
+
+    return name.length;
+  })
+);
