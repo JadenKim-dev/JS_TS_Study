@@ -91,3 +91,52 @@ class Person {
 
 매개변수 속성을 사용하는 것이 좋은지에 대해서는 논란이 있다.  
 가능하다면 일반 속성과 매개변수 속성 중 한가지만을 사용하여 혼란을 줄이는 것이 좋다.
+
+## 2) 네임스페이스와 트리플 슬래시 임포트
+
+ECMAScript2015 이전에는 자바스크립트에 공식적인 모듈 기능이 존재하지 않았고, 타입스크립트에서는 자체적인 모듈 시스템을 구축해서 사용했다.  
+이 때 module 키워드와 트리플 슬래시 임포트를 사용했다.  
+하지만 ECMAScript2015 에서부터 모듈 기능이 공식적으로 지원되기 시작했고, 타입스크립트에서는 충돌을 피하기 위해 관련된 코드를 묶기 위해 namespace 키워드를 추가했다.  
+또한 모듈을 가져오거나 내보낼 때에는 공식 기능과 동일하게 import / export를 사용한다.
+
+```ts
+module foo {
+    function bar() {}
+}
+
+/// <reference path="other.ts" />
+foo.bar();
+```
+
+트리플 슬래시 임포트와 module 키워드는 호환성을 위해서 남아있는 것이기 때문에, 이제는 사용하지 않아야 한다.
+
+## 3) 데코레이터
+
+데코레이터는 클래스, 메서드, 속성에 적용하여 어노테이션을 붙이거나 기능을 추가하는데 사용한다.  
+예를 들어 다음 예제의 logged 데코레이터는 메서드가 호출될 때마다 로그를 남기도록 기능을 추가한다.
+
+```ts
+class Greeter {
+    greeting: string;
+
+    constructor(message: string) {
+        this.greeting = message;
+    }
+
+    @logged
+    greet() {
+        return "Hello, " + this.greeting;
+    }
+}
+
+function logged(target: any, name: string, descriptor: PropertyDescriptor) {
+    const fn = target[name];
+    descriptor.value = function() {
+        console.log(`Calling ${name}`);
+        return fn.apply(this, arguments);
+    };
+}
+```
+
+하지만 아직 데코레이터는 표준화된 기술이 아니기 때문에, 추후에 호환성이 깨질 우려가 있다.  
+따라서 앵귤러, NestJS 처럼 데코레이터가 필수인 라이브러리를 사용하고 있는게 아니라면 데코레이터를 사용하지 않는게 좋다.
