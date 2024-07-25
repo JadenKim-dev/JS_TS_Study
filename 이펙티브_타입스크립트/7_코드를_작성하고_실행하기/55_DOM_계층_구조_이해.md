@@ -64,4 +64,11 @@ document.getElementById('my-div'); // HTMLElement
 document.getElementByld('my-div') as HTMLDivElement;
 ```
 
+이번에는 DOM 상에서 발생한 이벤트를 나타내는 Event 타입을 살펴보자.  
+Event 타입은 가장 추상화된 이벤트로, 그 하위에 구체적인 타입들이 존재한다.
 
+- UIEvent： 모든 종류의 사용자 인터페이스 이벤트
+- MouseEvent: 클릭 처럼 마우스로부터 발생되는 이벤트
+- TouchEvent： 모바일 기기의 터치 이벤트
+- WheelEvent: 스크롤 휠을 돌려서 발생되는 이벤트
+- KeyboardEvent： 키 누름 이벤트
