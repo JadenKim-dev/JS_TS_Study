@@ -8,8 +8,8 @@ DOM 계층은 총 5개 계층으로 구성되어 있다.
 - EventTarget: window, XMLHttpRequest
 - Node: document, Text, Comment
 - Element: HTMLElement, SVGElement 포함
-- HTMLElement: <i>, <b>
-- HTMLButtonElement: <button>
+- HTMLElement: `<i>`, `<b>`
+- HTMLButtonElement: `<button>`
 
 EventTarget은 DOM 타입 중 가장 추상화된 타입이다.  
 이벤트 리스너를 추가 및 제거하거나, 이벤트를 보내는 정도의 기능만을 가지고 있다.
@@ -48,3 +48,20 @@ HTMLCollection [i]
 다음으로, Element와 HTMLElement를 알아보자.  
 Element는 HTMLElement를 포함하는 개념으로, svg 태그의 계층 구조를 포함하는 SVGElement도 Element를 포함한다.  
 일반적인 html 태그들은 HTMLElement에 속한다.
+
+마지막으로 HTMLxxxElement는 가장 구체적인 타입으로, 특성에 맞는 자신만의 고유 속성을 가지고 있다.(input의 value, img의 src)  
+이런 속성에 접근하려면 타입이 해당 종류의 엘리먼트 타입이어야 하므로, 상당히 구체적으로 타입이 지정되어야 한다.  
+'button' 같은 HTML 태그 값을 이용하면 정확한 타입을 얻을 수 있지만, document.getElementById 같은 메서드로는 더 추상적인 타입만 얻을 수 있다.  
+이 때에는 타입 단언문을 이용하여 더 구체적인 타입을 지정할 수 있다.  
+다만 getElementById는 null을 반환할 수도 있으므로 필요하다면 null 체크도 해야 한다.
+
+```ts
+document.getElementsByTagName(’p')[0]; // HTMLParagraphElement
+document.createElement('button'); // HTMLButtonElement
+document.querySelector('div'); // HTMLDivElement
+
+document.getElementById('my-div'); // HTMLElement
+document.getElementByld('my-div') as HTMLDivElement;
+```
+
+
