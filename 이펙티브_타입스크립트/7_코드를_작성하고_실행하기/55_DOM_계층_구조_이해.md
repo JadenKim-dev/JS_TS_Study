@@ -72,3 +72,24 @@ Event 타입은 가장 추상화된 이벤트로, 그 하위에 구체적인 타
 - TouchEvent： 모바일 기기의 터치 이벤트
 - WheelEvent: 스크롤 휠을 돌려서 발생되는 이벤트
 - KeyboardEvent： 키 누름 이벤트
+
+Event의 타입을 좁히기 위해서는 문맥 정보를 활용할 수 있도록 코드를 구성해야 한다.  
+이벤트 핸들러를 인라인 함수로 넘겨주면 해당 이벤트 종류에 맞는 타입으로 추론이 된다.  
+또는 핸들러를 별도로 정의해야 한다면 매개변수의 이벤트 타입을 구체적으로 지정해줘야 한다.
+
+```ts
+function addDragHandler(el: HTMLElement) {
+    el.addEventListener('mousedown', eDown => { // eDown은 MouseEvent 타입
+        const dragStart = [eDown.clientX, eDown.clientY]; // clientX, clientY 속성 접근 가능
+        
+        const handleUp = (eUp: MouseEvent) => {
+            el.classList.remove('dragging');
+            el.removeEventListener('mouseup', handleUp);
+            const dragEnd = [eUp.clientX, eUp.clientY]; // clientX, clientY 속성 접근 가능
+            console.log('dx, dy =', [0, 1].map(i => dragEnd[i] - dragStart[i]));
+        };
+
+        el.addEventListener('mouseup', handleUp); // 핸들러의 매개변수에 대한 티입 체크가 이루어짐
+    });
+}
+```
