@@ -48,3 +48,35 @@ $('#graph').css({'width': '100px', 'height': '100px'}); // 오류 없음
 
 ## DOM 문제
 
+ts-check 지시자를 사용하면 DOM 엘리먼트 부분에 많은 타입 에러가 발생한다.  
+이 때 타입 단언문을 통해 타입을 명시해야 할 수도 있는데, 자바스크립트 파일에서는 JSDoc의 @type 구문으로 타입을 단언할 수 있다.
+
+```ts
+// @ts-check
+const ageEl = /** @type {HTMLInputElement} */ (document.getElementById('age'));
+ageEl.value = '1121'; // 정상
+```
+
+## 부정확한 JSDoc
+
+ts-check 지시자를 사용하면 JSDoc의 타입 정보를 활용하여 타입 체크를 수행한다.  
+따라서 JSDoc에 부정확한 타입 정보가 있었다면 이로 인해 타입 에러가 발생할 수 있다.  
+다음 예시의 경우에는 @param과 @returns에 명시된 매개변수 및 반환값의 타입이 부정확해서 타입 에러가 발생했다.  
+이런 경우는 모두 수정이 필요하다.
+
+```ts
+// @ts-check
+/**
+ * 엘리먼트의 크기(픽셀 단위)를 가져옵니다.
+ * @param {Node} el 해당 엘리먼트
+ * @return {{w: number, h: number}} 크기
+ */
+function getSize(el) {
+    const bounds = el.getBoundingClientRect(); // 'Node' 형식에 'getBoundingClientRect' 속성이 없습니다.
+    return { w: bounds.width, h: bounds.height }; // '{ width: any; height: any; }' 형식은 '{ w: number; h: number; }'에 할당할 수 없습니다.
+}
+```
+
+JSDoc을 사용하면 점진적으로 타입 정보를 추가하는 것이 가능하다.  
+@ts-check와 JSDoc을 함께 사용하면 타입스크립트와 비슷한 경험으로 작업하는 것이 가능하다.  
+하지만 이렇게 하면 주석이 코드 분량을 늘려서 로직을 해석하는데 방해가 될 수 있으므로, 가능하다면 타입스크립트로 전환하는 것이 바람직하다.
