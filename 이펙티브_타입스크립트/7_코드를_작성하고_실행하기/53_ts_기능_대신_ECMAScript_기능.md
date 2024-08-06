@@ -101,7 +101,7 @@ ECMAScript2015 이전에는 자바스크립트에 공식적인 모듈 기능이 
 
 ```ts
 module foo {
-    function bar() {}
+  function bar() {}
 }
 
 /// <reference path="other.ts" />
@@ -117,24 +117,24 @@ foo.bar();
 
 ```ts
 class Greeter {
-    greeting: string;
+  greeting: string;
 
-    constructor(message: string) {
-        this.greeting = message;
-    }
+  constructor(message: string) {
+    this.greeting = message;
+  }
 
-    @logged
-    greet() {
-        return "Hello, " + this.greeting;
-    }
+  @logged
+  greet() {
+    return "Hello, " + this.greeting;
+  }
 }
 
 function logged(target: any, name: string, descriptor: PropertyDescriptor) {
-    const fn = target[name];
-    descriptor.value = function() {
-        console.log(`Calling ${name}`);
-        return fn.apply(this, arguments);
-    };
+  const fn = target[name];
+  descriptor.value = function () {
+    console.log(`Calling ${name}`);
+    return fn.apply(this, arguments);
+  };
 }
 ```
 

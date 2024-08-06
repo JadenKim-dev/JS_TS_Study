@@ -6,8 +6,8 @@
 
 ```ts
 // @ts-check
-const person = {first: 'Grace', last: 'Hopper'};
-2 * person.first // 산술 연산 오른쪽은 'any', 'number', 'bigint' 또는 열거형 형식이어야 합니다.
+const person = { first: "Grace", last: "Hopper" };
+2 * person.first; // 산술 연산 오른쪽은 'any', 'number', 'bigint' 또는 열거형 형식이어야 합니다.
 ```
 
 ## 선언되지 않은 전역 변수
@@ -19,8 +19,8 @@ const person = {first: 'Grace', last: 'Hopper'};
 ```ts
 // types.d.ts
 interface UserData {
-    firstName: string;
-    lastName: string;
+  firstName: string;
+  lastName: string;
 }
 declare let user: UserData;
 
@@ -41,7 +41,7 @@ $ npm install —save-dev @types/jquery
 
 ```ts
 // @ts-check
-$('#graph').css({'width': '100px', 'height': '100px'}); // 오류 없음
+$("#graph").css({ width: "100px", height: "100px" }); // 오류 없음
 ```
 
 이를 통해 타입스크립트 마이그레이션 전에 서드파티 라이브러리에 대한 타입을 체크해볼 수 있다.
@@ -53,8 +53,8 @@ ts-check 지시자를 사용하면 DOM 엘리먼트 부분에 많은 타입 에�
 
 ```ts
 // @ts-check
-const ageEl = /** @type {HTMLInputElement} */ (document.getElementById('age'));
-ageEl.value = '1121'; // 정상
+const ageEl = /** @type {HTMLInputElement} */ document.getElementById("age");
+ageEl.value = "1121"; // 정상
 ```
 
 ## 부정확한 JSDoc
@@ -72,8 +72,8 @@ ts-check 지시자를 사용하면 JSDoc의 타입 정보를 활용하여 타입
  * @return {{w: number, h: number}} 크기
  */
 function getSize(el) {
-    const bounds = el.getBoundingClientRect(); // 'Node' 형식에 'getBoundingClientRect' 속성이 없습니다.
-    return { w: bounds.width, h: bounds.height }; // '{ width: any; height: any; }' 형식은 '{ w: number; h: number; }'에 할당할 수 없습니다.
+  const bounds = el.getBoundingClientRect(); // 'Node' 형식에 'getBoundingClientRect' 속성이 없습니다.
+  return { w: bounds.width, h: bounds.height }; // '{ width: any; height: any; }' 형식은 '{ w: number; h: number; }'에 할당할 수 없습니다.
 }
 ```
 

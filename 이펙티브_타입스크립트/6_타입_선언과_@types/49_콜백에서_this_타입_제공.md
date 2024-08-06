@@ -51,7 +51,7 @@ class ResetButton {
   }
 
   render() {
-    return makeButton({ text: 'Reset', onClick: this.onClick });
+    return makeButton({ text: "Reset", onClick: this.onClick });
   }
 
   onClick() {
@@ -65,27 +65,27 @@ class ResetButton {
 
 ```ts
 class ResetButton {
-    render() {
-        return makeButton({text: 'Reset', onClick: this.onClick});
-    }
+  render() {
+    return makeButton({ text: "Reset", onClick: this.onClick });
+  }
 
-    onClick = () => {
-        alert(`Reset ${this}`); // "this" 가 항상 인스턴스를 참조합니다
-    }
+  onClick = () => {
+    alert(`Reset ${this}`); // "this" 가 항상 인스턴스를 참조합니다
+  };
 }
 
 // 자바스크립트의 실제 생성 코드
 class ResetButton {
-    constructor() {
-        var _this = this;
-        this.onClick = function () {
-            alert("Reset " + _this);
-        };
-    }
+  constructor() {
+    var _this = this;
+    this.onClick = function () {
+      alert("Reset " + _this);
+    };
+  }
 
-    render() {
-        return makeButton({ text: 'Reset', onClick: this.onClick });
-    }
+  render() {
+    return makeButton({ text: "Reset", onClick: this.onClick });
+  }
 }
 ```
 
@@ -95,14 +95,14 @@ class ResetButton {
 
 ```ts
 function addKeyListener(
-    el: HTMLElement,
-    fn: (this: HTMLElement, e: KeyboardEvent) => void
+  el: HTMLElement,
+  fn: (this: HTMLElement, e: KeyboardEvent) => void
 ) {
-    el.addEventListener('keydown', e => {
-        fn.call(el, e); // 정상
-        fn(el, e); // 1개의 인수가 필요한데 2개를 가져왔습니다.
-        fn(e); // 'void' 형식의 'this' 컨텍스트를 메서드의 'HTMLElement', 형식 'this'에 할당할 수 없습니다.
-    });
+  el.addEventListener("keydown", (e) => {
+    fn.call(el, e); // 정상
+    fn(el, e); // 1개의 인수가 필요한데 2개를 가져왔습니다.
+    fn(e); // 'void' 형식의 'this' 컨텍스트를 메서드의 'HTMLElement', 형식 'this'에 할당할 수 없습니다.
+  });
 }
 ```
 
@@ -111,16 +111,16 @@ function addKeyListener(
 
 ```ts
 declare let el: HTMLElement;
-addKeyListener(el, function(e) {
-    this.innerHTML; // 정상, "this"는 HTMLElement 타입
+addKeyListener(el, function (e) {
+  this.innerHTML; // 정상, "this"는 HTMLElement 타입
 });
 
 class Foo {
-    registerHandler(el: HTMLElement) {
-        addKeyListener(el, e => {
-            this.innerHTML; // 'Foo' 유형에 'innerHTML' 속성이 없습니다
-        });
-    }
+  registerHandler(el: HTMLElement) {
+    addKeyListener(el, (e) => {
+      this.innerHTML; // 'Foo' 유형에 'innerHTML' 속성이 없습니다
+    });
+  }
 }
 ```
 

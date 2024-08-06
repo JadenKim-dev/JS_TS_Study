@@ -14,9 +14,9 @@ jest의 경우 ts-jest를 설치하고 jest.config.js에서 전달할 타입스�
 
 ```ts
 module.exports = {
-    transform: {
-        '^.+\\.tsx?$': 'ts-jest',
-    },
+  transform: {
+    "^.+\\.tsx?$": "ts-jest",
+  },
 };
 ```
 

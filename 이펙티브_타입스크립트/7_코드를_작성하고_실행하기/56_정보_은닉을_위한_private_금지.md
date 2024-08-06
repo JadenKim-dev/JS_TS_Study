@@ -2,9 +2,10 @@
 
 타입스크립트에서는 public, protected, private 접근 제어자를 사용해서 클래스의 속성에 대한 접근 규칙을 지정할 수 있다.  
 실제로 접근할 수 없는 속성에 접근하려고 하면 다음과 같이 타입 에러가 발생한다.
+
 ```ts
 class Diary {
-    private secret = 'cheated on my English test';
+  private secret = "cheated on my English test";
 }
 
 const diary = new Diary();
@@ -17,7 +18,7 @@ console.log(diary.secret);
 
 ```ts
 const diary = new Diary();
-(diary as any).secret // 정상
+(diary as any).secret; // 정상
 ```
 
 런타임에도 정보를 은닉하기 위한 가장 확실한 방법은 클로저를 사용하여 각 메서드를 정의하는 것이다.  
@@ -47,21 +48,20 @@ checker.checkPassword('s3cret'); // 결과는 true
 접두사로 #을 붙이면 런타임과 타입 체크에서 모두 필드를 비공개로 만들 수 있다.  
 또한 동일 클래스의 인스턴스끼리는 비공개 필드에 접근할 수 있다.
 
-
 ```ts
 class PasswordChecker {
-    #passwordHash: number;
+  #passwordHash: number;
 
-    constructor(passwordHash: number) {
-        this.#passwordHash = passwordHash;
-    }
+  constructor(passwordHash: number) {
+    this.#passwordHash = passwordHash;
+  }
 
-    checkPassword(password: string) {
-        return hash(password) === this.#passwordHash;
-    }
+  checkPassword(password: string) {
+    return hash(password) === this.#passwordHash;
+  }
 }
 
-const checker = new PasswordChecker(hash('s3cret'));
-console.log(checker.checkPassword('secret')); // 결과는 false
-console.log(checker.checkPassword('s3cret')); // 결과는 true
+const checker = new PasswordChecker(hash("s3cret"));
+console.log(checker.checkPassword("secret")); // 결과는 false
+console.log(checker.checkPassword("s3cret")); // 결과는 true
 ```

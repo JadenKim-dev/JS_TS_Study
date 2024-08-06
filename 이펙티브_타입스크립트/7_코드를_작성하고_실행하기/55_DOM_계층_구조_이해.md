@@ -1,7 +1,7 @@
 # 55. DOM 계층 구조 이해하기
 
 웹 브라우저에서 자바스크립트를 실행할 때에는 DOM 계층에 접근해야 하는 경우가 많다.  
-타입스크립트에서는 DOM 계층에 대해서도 타입 체크를 수행하기 때문에, 수월하게 DOM 계층 구조를 파악할 수 있게 도와준다.  
+타입스크립트에서는 DOM 계층에 대해서도 타입 체크를 수행하기 때문에, 수월하게 DOM 계층 구조를 파악할 수 있게 도와준다.
 
 DOM 계층은 총 5개 계층으로 구성되어 있다.
 
@@ -21,10 +21,10 @@ EventTarget은 DOM 타입 중 가장 추상화된 타입이다.
 
 ```ts
 function handleDrag(eDown: Event) {
-    const targetEl = eDown.currentTarget;
-    targetEl.classList.add('dragging');
-    // 개체가 null인 것 같습니다.
-    // 'EventTarget' 형식에 'classList' 속성이 없습니다.
+  const targetEl = eDown.currentTarget;
+  targetEl.classList.add("dragging");
+  // 개체가 null인 것 같습니다.
+  // 'EventTarget' 형식에 'classList' 속성이 없습니다.
 }
 ```
 
@@ -79,17 +79,21 @@ Event의 타입을 좁히기 위해서는 문맥 정보를 활용할 수 있도�
 
 ```ts
 function addDragHandler(el: HTMLElement) {
-    el.addEventListener('mousedown', eDown => { // eDown은 MouseEvent 타입
-        const dragStart = [eDown.clientX, eDown.clientY]; // clientX, clientY 속성 접근 가능
-        
-        const handleUp = (eUp: MouseEvent) => {
-            el.classList.remove('dragging');
-            el.removeEventListener('mouseup', handleUp);
-            const dragEnd = [eUp.clientX, eUp.clientY]; // clientX, clientY 속성 접근 가능
-            console.log('dx, dy =', [0, 1].map(i => dragEnd[i] - dragStart[i]));
-        };
+  el.addEventListener("mousedown", (eDown) => {
+    // eDown은 MouseEvent 타입
+    const dragStart = [eDown.clientX, eDown.clientY]; // clientX, clientY 속성 접근 가능
 
-        el.addEventListener('mouseup', handleUp); // 핸들러의 매개변수에 대한 티입 체크가 이루어짐
-    });
+    const handleUp = (eUp: MouseEvent) => {
+      el.classList.remove("dragging");
+      el.removeEventListener("mouseup", handleUp);
+      const dragEnd = [eUp.clientX, eUp.clientY]; // clientX, clientY 속성 접근 가능
+      console.log(
+        "dx, dy =",
+        [0, 1].map((i) => dragEnd[i] - dragStart[i])
+      );
+    };
+
+    el.addEventListener("mouseup", handleUp); // 핸들러의 매개변수에 대한 티입 체크가 이루어짐
+  });
 }
 ```
