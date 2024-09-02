@@ -5,15 +5,15 @@
 암시적 any 타입의 변수에 값을 할당하면 해당하는 값의 타입으로 any가 진화한다.
 
 예를 들어 start에서 limit 까지의 숫자를 배열에 담아 반환하는 range 메서드를 구현해보자.  
-아래 구현에서 반환 값인 out의 타입은 처음에는 `any[]` 였다가, 이후에 number 값들이 추가되면서 `number[]`로 진화했다.  
+아래 구현에서 반환 값인 out의 타입은 처음에는 `any[]` 였다가, 이후에 number 값들이 추가되면서 `number[]`로 진화했다.
 
 ```ts
 function range(start: number, limit: number) {
-    const out = []; // 타입이 any[]
-    for (let i = start; i < limit; i++) {
-        out.push(i); // out의 타입이 any[]
-    }
-    return out; // 타입이 number[]
+  const out = []; // 타입이 any[]
+  for (let i = start; i < limit; i++) {
+    out.push(i); // out의 타입이 any[]
+  }
+  return out; // 타입이 number[]
 }
 ```
 
@@ -21,10 +21,10 @@ function range(start: number, limit: number) {
 
 ```ts
 const result = []; // any[]
-result.push('a');
-result // string[]
+result.push("a");
+result; // string[]
 result.push(1);
-result // (string | number) []
+result; // (string | number) []
 ```
 
 조건문에서는 분기에 따라 타입이 변하기도 한다.  
@@ -33,11 +33,11 @@ result // (string | number) []
 ```ts
 let val: any; // 타입이 any
 if (Math.random() < 0.5) {
-    val = /hello/;
-    val; // 타입이 RegExp
+  val = /hello/;
+  val; // 타입이 RegExp
 } else {
-    val = 12;
-    val; // 타입이 number
+  val = 12;
+  val; // 타입이 number
 }
 val; // 타입이 number | RegExp
 ```
@@ -48,13 +48,13 @@ try catch 문에서도 비슷한 방식으로 동작하고, null로 초기값을
 ```ts
 let val = null; // val의 타입은 any
 try {
-    somethingDangerous();
-    val = 12;
-    val // 타입이 number
+  somethingDangerous();
+  val = 12;
+  val; // 타입이 number
 } catch (e) {
-    console.warn('alas!');
+  console.warn("alas!");
 }
-val // 타입이 number | null
+val; // 타입이 number | null
 ```
 
 any의 진화는 noImplicitAny가 설정된 상태에서 변수의 타입이 암시적 any인 경우에 발생한다.  
@@ -64,11 +64,11 @@ any의 진화는 noImplicitAny가 설정된 상태에서 변수의 타입이 암
 let val: any;
 
 if (Math.random() < 0.5) {
-    val = /hello/;
-    val; // any
+  val = /hello/;
+  val; // any
 } else {
-    val = 12;
-    val; // any
+  val = 12;
+  val; // any
 }
 
 val; // any
@@ -78,13 +78,13 @@ val; // any
 
 ```ts
 function range(start: number, limit: number) {
-    const out = [];
-    // 'out' 변수는 형식을 확인할 수 없는 경우 일부 위치에서 암시적으로 ‘any' 형식입니다.
-    if (start === limit) {
-        return out;
-        // 'out' 변수에는 암시적으로 'any[]' 형식이 포함됩니다.
-    }
-    // 추가 로직이 필요할 경우 여기에 작성
+  const out = [];
+  // 'out' 변수는 형식을 확인할 수 없는 경우 일부 위치에서 암시적으로 ‘any' 형식입니다.
+  if (start === limit) {
+    return out;
+    // 'out' 변수에는 암시적으로 'any[]' 형식이 포함됩니다.
+  }
+  // 추가 로직이 필요할 경우 여기에 작성
 }
 ```
 
@@ -94,13 +94,13 @@ function range(start: number, limit: number) {
 
 ```ts
 function makeSquares(start: number, limit: number) {
-    const out = [];
-    // ~ 'out' 변수는 일부 위치에서 암시적으로 'any[]’ 형식입니다.
-    range(start, limit).forEach(i => {
-        out.push(i * i);
-    });
-    return out;
-    // ~ 'out' 변수에는 암시적으로 'any[]' 형식이 포함됩니다.
+  const out = [];
+  // ~ 'out' 변수는 일부 위치에서 암시적으로 'any[]’ 형식입니다.
+  range(start, limit).forEach((i) => {
+    out.push(i * i);
+  });
+  return out;
+  // ~ 'out' 변수에는 암시적으로 'any[]' 형식이 포함됩니다.
 }
 ```
 

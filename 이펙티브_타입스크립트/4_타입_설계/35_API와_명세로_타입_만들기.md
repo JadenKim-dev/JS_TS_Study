@@ -10,7 +10,7 @@
 아래 구현에서는 Feature가 coordinates를 가지지 않는 GeometryCollection 타입을 포함하므로, coordinates에 접근하는 부분에서 예외가 발생한다.
 
 ```ts
-import { Feature } from 'geojson';
+import { Feature } from "geojson";
 
 function calculateBoundingBox(f: Feature): BoundingBox | null {
   let box: BoundingBox | null = null;
@@ -35,12 +35,12 @@ function calculateBoundingBox(f: Feature): BoundingBox | null {
 
 ```ts
 const geometryHelper = (g: Geometry) => {
-  if (g.type === 'GeometryCollection') {
+  if (g.type === "GeometryCollection") {
     g.geometries.forEach(geometryHelper);
   } else {
     helper(g, coordinates); // 정상
   }
-}
+};
 
 const { geometry } = f;
 if (geometry) {

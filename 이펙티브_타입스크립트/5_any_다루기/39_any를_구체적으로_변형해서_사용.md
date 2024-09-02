@@ -8,11 +8,11 @@ any는 자바스크립트에서 표현할 수 있는 모든 값을 할당 가능
 
 ```ts
 function getLengthBad(array: any) {
-    return array.length; // any
+  return array.length; // any
 }
 
 function getLength(array: any[]) {
-    return array.length; // number
+  return array.length; // number
 }
 
 getLengthBad(/123/); // 오류 없음
@@ -25,23 +25,23 @@ getLength(/123/); //'RegExp' 형식의 인수는 'any[]' 형식의 매개변수�
 
 ```ts
 function hasTwelveLetterKey(o: { [key: string]: any }) {
-    for (const key in o) {
-        if (key.length === 12) {
-            console.log(key, o[key]); // 속성 접근 가능
-            return true;
-        }
+  for (const key in o) {
+    if (key.length === 12) {
+      console.log(key, o[key]); // 속성 접근 가능
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 function hasTwelveLetterKey(o: { [key: string]: any }): boolean {
-    for (const key in o) {
-        if (key.length === 12) {
-            console.log(key, o[key]); // '{}' 형식에 인덱스 시그니처가 없으므로 요소에 암시적으로 'any' 형식이 있습니다.
-            return true;
-        }
+  for (const key in o) {
+    if (key.length === 12) {
+      console.log(key, o[key]); // '{}' 형식에 인덱스 시그니처가 없으므로 요소에 암시적으로 'any' 형식이 있습니다.
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 ```
 
